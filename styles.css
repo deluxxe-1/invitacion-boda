@@ -1,0 +1,528 @@
+/* =============================================
+   INVITACIÓN DE BODA — Diego & Silvia
+   Pristine White Envelope & Scroll-Out Paper
+   ============================================= */
+
+:root {
+  /* Minimalist Elegant Palette */
+  --bg-page: #f9f8f6;
+  
+  --env-back: #fcfbf9;
+  --env-front-base: #ffffff;
+  --env-front-left: #fdfdfc;
+  --env-front-right: #fcfcfb;
+  --env-front-bottom: #fbfbf9;
+  
+  --gold: #d4af37;
+  --gold-light: #f2e8c9;
+  --gold-dark: #b5952f;
+  
+  --text-main: #2a2a2a;
+  --text-light: #707070;
+  
+  --font-display: 'Cinzel Decorative', serif;
+  --font-heading: 'Cinzel', serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-body: 'Cormorant Garamond', serif;
+  
+  /* Envelope Geometry */
+  --env-w: min(90vw, 420px);
+  --env-h: calc(var(--env-w) * 0.65);
+  --env-top: calc(50vh - var(--env-h) / 2);
+  --env-bottom: calc(50vh + var(--env-h) / 2);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  font-family: var(--font-body);
+  color: var(--text-main);
+  /* height will be set dynamically by JS to allow scrolling */
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===================== LOADER & HINTS ===================== */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-page);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.loader-ring {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--gold-light);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scroll-hint {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+}
+
+.scroll-hint span {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  color: var(--text-light);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  width: 12px; height: 12px;
+  border-right: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: rotate(45deg);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(6px); }
+}
+
+/* ===================== SCENE SETUP ===================== */
+.scene {
+  position: relative;
+  width: 100%;
+}
+
+.fixed-center {
+  position: fixed;
+  top: var(--env-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--env-w);
+  height: var(--env-h);
+}
+
+/* ===================== 1. ENVELOPE BACK ===================== */
+.env-back {
+  background: var(--env-back);
+  border-radius: 2px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+.env-back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.02);
+  border-radius: 2px;
+}
+
+/* ===================== 2. PAPER (THE INVITATION) ===================== */
+.paper-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--env-bottom); /* Cuts off exactly at the bottom of the envelope */
+  overflow: hidden;
+  z-index: 20;
+  pointer-events: none; /* Let clicks pass to the paper underneath */
+}
+
+.paper {
+  position: absolute;
+  top: calc(var(--env-top) + 15px); /* Starts slightly inside the envelope */
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: calc(var(--env-w) - 16px);
+  background: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.03);
+  padding: 40px 25px 60px 25px;
+  border: 1px solid var(--gold-light);
+  will-change: transform;
+  pointer-events: auto; /* Re-enable clicks for the form */
+}
+
+.paper::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--gold-light);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ===================== 3. ENVELOPE FRONT POCKET ===================== */
+.env-front {
+  z-index: 30;
+  pointer-events: none;
+  filter: drop-shadow(0 -4px 6px rgba(0,0,0,0.03));
+}
+
+.env-pocket-left, .env-pocket-right, .env-pocket-bottom {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+}
+
+.env-pocket-left {
+  background: var(--env-front-left);
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  border-left: 1px solid rgba(0,0,0,0.03);
+}
+
+.env-pocket-right {
+  background: var(--env-front-right);
+  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+  border-right: 1px solid rgba(0,0,0,0.03);
+}
+
+.env-pocket-bottom {
+  background: var(--env-front-bottom);
+  clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+/* ===================== 4. ENVELOPE FLAP & WAX SEAL ===================== */
+.env-flap {
+  z-index: 40;
+  height: calc(var(--env-h) * 0.65);
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.flap-outside, .flap-inside {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 2px 0 0;
+}
+
+.flap-outside {
+  background: var(--env-front-base);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  backface-visibility: hidden;
+  filter: drop-shadow(0 5px 8px rgba(0,0,0,0.05));
+}
+
+.flap-inside {
+  background: var(--env-back);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+}
+
+.wax-seal {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #eaddb6, #c5a869);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.wax-seal span {
+  font-family: var(--font-display);
+  color: #ffffff;
+  font-size: 13px;
+  text-shadow: 0 1px 2px rgba(197, 168, 105, 0.6);
+}
+
+/* ===================== INVITATION CONTENT STYLING ===================== */
+.paper-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero { text-align: center; margin-bottom: 35px; }
+
+.names {
+  font-family: var(--font-script);
+  font-size: clamp(2.4rem, 8vw, 3.2rem);
+  font-weight: normal;
+  margin: 0 0 5px 0;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.divider .line {
+  height: 1px;
+  width: 40px;
+  background: var(--gold-light);
+}
+
+.divider .ornament {
+  margin: 0 15px;
+  color: var(--gold);
+  font-size: 0.8rem;
+  font-family: var(--font-heading);
+}
+
+.hero-text {
+  text-align: center;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text-light);
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Date */
+.date-section { text-align: center; margin-bottom: 35px; }
+
+.date-card {
+  display: inline-block;
+  padding: 15px 30px;
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+}
+
+.date-card span { display: block; text-align: center; }
+
+.weekday {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.day {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  line-height: 1.1;
+  color: var(--text-main);
+  margin: 2px 0;
+}
+
+.month-year {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Events */
+.event-section { text-align: center; margin-bottom: 20px; }
+
+.event-type {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 5px 0;
+}
+
+.event-place {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 2px 0;
+}
+
+.event-address {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-light);
+  margin: 0 0 10px 0;
+}
+
+.event-time {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  border: 1px solid var(--gold-light);
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin: 0;
+  color: var(--text-main);
+  letter-spacing: 1px;
+}
+
+/* Contact */
+.contact-section { text-align: center; margin-bottom: 40px; }
+
+.contact-text {
+  font-style: italic;
+  color: var(--text-light);
+  margin-bottom: 15px;
+  font-size: 1.05rem;
+}
+
+.contact-cards {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border: 1px solid var(--gold-light);
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: var(--text-main);
+  transition: background 0.3s;
+}
+
+.contact-card:active { background: #fafafa; }
+
+.contact-card .name {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.contact-card .phone {
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
+/* RSVP Form */
+.rsvp-section {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.rsvp-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  color: var(--text-light);
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-main);
+  border: 1px solid #e0e0e0;
+  border-radius: 2px;
+  outline: none;
+  background: #fdfdfc;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--gold);
+  background: #ffffff;
+}
+
+.form-group textarea { min-height: 80px; resize: vertical; }
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 2px;
+  background: #fdfdfc;
+}
+
+.radio-label input[type="radio"] {
+  margin: 0;
+  accent-color: var(--gold);
+}
+
+.allergies-group { display: none; }
+.allergies-group.visible { display: block; }
+
+#submitBtn {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--text-main);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+#submitBtn:active { background: var(--gold); }
+#submitBtn:disabled { opacity: 0.5; }
+
+.feedback {
+  display: none;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 2px;
+  font-style: italic;
+}
+
+.feedback.success { display: block; background: #fdfbf5; border: 1px solid var(--gold-light); color: var(--gold-dark); }
+.feedback.error { display: block; background: #fff5f5; border: 1px solid #fecaca; color: #991b1b; }

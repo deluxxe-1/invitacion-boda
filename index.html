@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Diego & Silvia — Nos casamos</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="pageLoader" class="loader">
+    <div class="loader-ring"></div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-hint" id="scrollHint">
+    <span>Desliza para abrir</span>
+    <div class="scroll-arrow"></div>
+  </div>
+
+  <!-- Main Scene -->
+  <div class="scene">
+    
+    <!-- 1. Envelope Back -->
+    <div class="env-back fixed-center"></div>
+    
+    <!-- 2. Paper Container (Masked to hide overflow below envelope) -->
+    <div class="paper-mask">
+      <div class="paper" id="paper">
+        <div class="paper-content">
+          
+          <div class="hero">
+            <h1 class="names">Diego & Silvia</h1>
+            <h2 class="subtitle">Nos casamos</h2>
+            <div class="divider">
+              <span class="line"></span>
+              <span class="ornament">~</span>
+              <span class="line"></span>
+            </div>
+            <p class="hero-text">Y nos encantaría que nos acompañaras en este día tan especial.</p>
+          </div>
+
+          <div class="date-section">
+            <div class="date-card">
+              <span class="weekday">Sábado</span>
+              <span class="day">12</span>
+              <span class="month-year">Junio · 2027</span>
+            </div>
+          </div>
+
+          <div class="event-section">
+            <h3 class="event-type">Ceremonia Religiosa</h3>
+            <p class="event-place">Iglesia de San Jerónimo el Real</p>
+            <p class="event-address">Madrid</p>
+            <p class="event-time">17:30 horas</p>
+          </div>
+
+          <div class="divider">
+            <span class="line"></span>
+            <span class="ornament">&</span>
+            <span class="line"></span>
+          </div>
+
+          <div class="event-section">
+            <h3 class="event-type">Celebración</h3>
+            <p class="event-place">Complejo El Olivar</p>
+            <p class="event-address">Alcalá de Henares, Madrid</p>
+            <p class="event-time">19:30 horas</p>
+          </div>
+
+          <div class="contact-section">
+            <div class="divider"><span class="line"></span></div>
+            <p class="contact-text">Reserva esta fecha, os esperamos</p>
+            <div class="contact-cards">
+              <a href="tel:+34628508040" class="contact-card">
+                <span class="name">Silvia</span>
+                <span class="phone">628 508 040</span>
+              </a>
+              <a href="tel:+34691643350" class="contact-card">
+                <span class="name">Diego</span>
+                <span class="phone">691 643 350</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="rsvp-section">
+            <h2 class="rsvp-title">Confirma tu Asistencia</h2>
+            
+            <form id="rsvpForm">
+              <div class="form-group">
+                <label for="guestName">Nombre completo</label>
+                <input type="text" id="guestName" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="guestCount">Acompañantes</label>
+                <select id="guestCount" required>
+                  <option value="" disabled selected>Selecciona</option>
+                  <option value="0">Voy solo/a</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label>Asistencia</label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" name="asistencia" value="ceremonia" required>
+                    <span>Solo Ceremonia</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="asistencia" value="ceremonia_y_celebracion" required>
+                    <span>Ceremonia y Celebración</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group allergies-group" id="allergiesGroup">
+                <label for="allergies">Alergias alimentarias</label>
+                <textarea id="allergies"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="guestMessage">Mensaje para los novios (opcional)</label>
+                <textarea id="guestMessage"></textarea>
+              </div>
+              
+              <button type="submit" id="submitBtn">Confirmar</button>
+            </form>
+            
+            <div id="successFeedback" class="feedback success" style="display:none;">¡Gracias por confirmar!</div>
+            <div id="errorFeedback" class="feedback error" style="display:none;">Ha ocurrido un error. Inténtalo de nuevo.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <!-- 3. Envelope Front Pocket -->
+    <div class="env-front fixed-center">
+      <div class="env-pocket-left"></div>
+      <div class="env-pocket-right"></div>
+      <div class="env-pocket-bottom"></div>
+    </div>
+    
+    <!-- 4. Envelope Flap & Wax Seal -->
+    <div class="env-flap fixed-center" id="envelopeFlap">
+      <div class="flap-outside">
+        <div class="wax-seal" id="waxSeal"><span>D&S</span></div>
+      </div>
+      <div class="flap-inside"></div>
+    </div>
+
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
